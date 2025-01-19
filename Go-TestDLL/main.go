@@ -4,21 +4,20 @@ import (
 	"C"
 	"fmt"
 	"syscall"
-	"unsafe"
 )
+import "unsafe"
 
 func main() {
 	// Load the DLL
-	dll, err := syscall.LoadLibrary("/xParser-DLL-Development/DLL/mydll.dll")
+	dll, err := syscall.LoadLibrary("/Go-DLL/DLL/mydll.dll")
 	if err != nil {
 		panic(err)
 	}
 	defer syscall.FreeLibrary(dll)
-
-	// Get a handle to the function
+	//Get a handle to the function
 	proc, err := syscall.GetProcAddress(dll, "SayHello")
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 
 	name := "The whole Big World"
@@ -27,8 +26,17 @@ func main() {
 	helloMessage := C.GoString((*C.char)(unsafe.Pointer(ret)))
 	fmt.Println("Returned message:", helloMessage)
 
-	proc, _ = syscall.GetProcAddress(dll, "Add")
+	proc, err = syscall.GetProcAddress(dll, "Add")
+	if err != nil {
+		fmt.Println("test exit")
+
+		fmt.Println(err)
+	}
 	// Call the function
 	ret, _, _ = syscall.Syscall(proc, 100, 123, 455, 0)
 	fmt.Println("Return value:", ret)
+
+	a, b := 2, 3
+	ret, _, _ = syscall.Syscall(proc, 2, uintptr(a), uintptr(b), 0)
+	fmt.Println("Result:", int(ret))
 }
