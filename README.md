@@ -4,6 +4,8 @@ Go Dynamic Link Library
 
 go build -buildmode=c-shared -o mydll.dll main.go
 
+[harbor thread](https://groups.google.com/g/harbour-users/c/RaZf0cXG_6k)
+
 [harbour thread](https://groups.google.com/g/harbour-users/c/Dr-4xliqzSU/m/30oV8onABQAJ)
 
 [harbour thread](https://groups.google.com/g/harbour-users/c/Oot7ZSTFtzg/m/mQ6TcSVJCgAJ)
