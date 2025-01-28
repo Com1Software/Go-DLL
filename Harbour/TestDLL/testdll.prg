@@ -1,60 +1,44 @@
-/*
-    mydyn.prg
-    compile: hbmk2 mydyn
-*/
-
 #include "hbdyn.ch"
-#define MAX_PATH 260
 
-PROCEDURE Main()
+static hLib
 
-   #if defined( __PLATFORM__WINDOWS )
+//----------------------------------------------------------------//
 
-   LOCAL hLib, nResult, cVolume, cVolumeName, nNameSize, nSerial, cSerial
+function Main()
 
-    cVolume := "C:\"
-    cVolumeName := SPACE(MAX_PATH+1)
-    nSerial := 0
-    nNameSize := MAX_PATH+1
-   
-    SetColor( "G+/N" )
-    CLS
-   
-    ? "Get volume info using Kernel32.dll --> GetVolumeInformationA"
-    ?
-   hLib := hb_libLoad( "Kernel32.dll" )
-   
-    IF ! Empty( hLib )
-   
-        ? "Kernel32.dll loaded!"
-       
-        nResult := hb_DynCall( { "GetVolumeInformationA", hLib, HB_DYN_CALLCONV_STDCALL }, ;
-                                cVolume     ,;
-                                @cVolumeName, ;
-                                nNameSize   , ;
-                                @nSerial    , ;
-                                0, 0, 0, 0 )
+   local nId, nRetCode
 
-        ? "Calling GetVolumeInformationA: " + Iif( nResult > 0, "Succeeded!", "Failed!" )
-       
-        // always unload DLL when done!
-        ? "Unloading DLL:",  hb_libFree( hLib )
-        ?
-        cVolumeName := Alltrim( cVolumeName )
-        cSerial     := hb_NumToHex( nSerial )
-        ? "Volume:", cVolumeName
-        ? "Serial:", Stuff( cSerial, 5, 0, "-" )
-       
-    ELSE
-   
-        ? "Kernel32.dll failed to load!"
-       
-    ENDIF
-   
-    #else
-   
-        ? "Windows only code! Cannot run on this platform."
-       
-   #endif
+   hLib = hb_libLoad( "\go-dll\DLL\mydll.dll" )
 
-   RETURN
+   if ! Empty( hLib )
+      ? "mydll loaded"
+
+      nId = LoadDLL()
+      ? "Calling mydll " + If( nId > 0, "Succeeded!", "Failed!" )
+      ? CallGoal( nId )
+      hb_libFree( hLib )
+   endif
+
+return nil
+
+//----------------------------------------------------------------//
+
+function LoadDLL( cCommandLine, nBufferSize, nEncryption, nTickle )
+
+   hb_default( @cCommandLine, "Hey There" )
+   hb_default( @nBufferSize, 0 )
+   hb_default( @nEncryption, 0 )
+   hb_default( @nTickle, 0 )
+
+return hb_DynCall( { "SayHello", hLib, hb_bitOr( HB_DYN_CALLCONV_STDCALL, HB_DYN_CTYPE_LONG ),;
+                   HB_DYN_CTYPE_CHAR_PTR, HB_DYN_CTYPE_LONG, HB_DYN_CTYPE_LONG, HB_DYN_CTYPE_LONG },;
+                   cCommandLine, nBufferSize, nEncryption, nTickle )    
+
+
+//----------------------------------------------------------------//
+
+function CallGoal( nId )
+
+return hb_DynCall( { "SayHello", hLib, hb_bitOr( HB_DYN_CALLCONV_STDCALL, HB_DYN_CTYPE_CHAR_PTR ),;
+                   HB_DYN_CTYPE_LONG }, nId )    
+
