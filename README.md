@@ -16,4 +16,4 @@ go build -buildmode=c-shared -o mydll.dll main.go
 
 [How to build Harbour apps using pCode DLL with hbmk2](https://harbour.wiki/index.asp?page=PublicArticles&mode=show&id=220528185155&sig=8267913849)
 
-[C3 on VSC](https://travis.media/blog/how-to-run-csharp-in-vscode/)
+[C# on VSC](https://travis.media/blog/how-to-run-csharp-in-vscode/)
