@@ -7,7 +7,7 @@ typedef int (__stdcall *AddFunc)(int, int);
 
 int main() {
     // Load the DLL
-    HINSTANCE hInstLibrary = LoadLibrary(TEXT("mydll.dll"));
+    HINSTANCE hInstLibrary = LoadLibrary(TEXT("/Go-DLL/DLL/mydll.dll"));
     if (!hInstLibrary) {
         fprintf(stderr, "Could not load the DLL\n");
         return 1;
